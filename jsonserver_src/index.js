@@ -6,7 +6,7 @@ module.exports = {
         console.log('Parsing arguments');
         let options = parsing.optionParse(args);
         console.log('Loading from:', options.file, 'encoding:', options.encoding);
-        let data = loadData(options.file, options.encoding);
+        let data = loadData(options.file, options.encoding, options.modify);
         console.log('Creating server');
         let server = createServer(data, (m, stt, url, date) => console.log([m, stt, url, date.toLocaleString()].join('\t')));
         server.addListener('listening', function () {
@@ -14,7 +14,7 @@ module.exports = {
         });
         server.listen(options.port);
         if (options.modify) {
-            process.addListener('SIGINT', function () {
+            process.on('SIGINT', function () {
                 let fs = require('fs');
                 fs.writeFileSync(options.file, JSON.stringify(data), options.encoding);
                 process.exit(0);
@@ -23,10 +23,16 @@ module.exports = {
     }
 }
 
-function loadData(file = '', encoding = '') {
+function loadData(file = 'data.json', encoding = 'utf8', willModify = false) {
     let fs = require('fs');
-    let json = fs.readFileSync(file, encoding);
-    return JSON.parse(json);
+    let mode = fs.constants.R_OK;
+    if (willModify)
+        mode |= fs.constants.W_OK;
+    if (fs.accessSync(file, mode)) {
+        let json = fs.readFileSync(file, encoding);
+        return JSON.parse(json);
+    }
+    throw file + ': permission denied';
 }
 
 function doGet(data, path = [], params = {}) {

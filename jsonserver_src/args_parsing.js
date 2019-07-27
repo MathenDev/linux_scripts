@@ -1,6 +1,6 @@
 module.exports = {
     optionParse: function (args = []) {
-        let attrs = Object.create(defaultOptions);
+        let attrs = {};
         for (let i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case '-p':
@@ -36,9 +36,3 @@ module.exports = {
         return obj;
     }
 }
-
-const defaultOptions = {
-    file: 'data.json',
-    encoding: 'utf8'
-};
-
