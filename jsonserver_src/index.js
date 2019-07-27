@@ -28,11 +28,9 @@ function loadData(file = 'data.json', encoding = 'utf8', willModify = false) {
     let mode = fs.constants.R_OK;
     if (willModify)
         mode |= fs.constants.W_OK;
-    if (fs.accessSync(file, mode)) {
-        let json = fs.readFileSync(file, encoding);
-        return JSON.parse(json);
-    }
-    throw file + ': permission denied';
+    fs.accessSync(file, mode);
+    let json = fs.readFileSync(file, encoding);
+    return JSON.parse(json);
 }
 
 function doGet(data, path = [], params = {}) {
