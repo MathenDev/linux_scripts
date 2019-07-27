@@ -52,6 +52,7 @@ function doGet(data, path = [], params = {}) {
 
 function createServer(data = {}, onRequest = function (method = 'GET', statusCode = 200, url = '/', date = new Date()) { }) {
     let http = require('http');
+    let parsing = require('./args_parsing');
     let server = http.createServer(function (request, response) {
         let requestTime = new Date();
         let statusCode = 0;
