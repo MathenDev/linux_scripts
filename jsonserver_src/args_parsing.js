@@ -15,6 +15,10 @@ module.exports = {
                 case '--encoding':
                     attrs.encoding = args[++i];
                     break;
+                case '-s':
+                case '--save':
+                    attrs.modify = true;
+                    break
             }
         }
         return attrs;

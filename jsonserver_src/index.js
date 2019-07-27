@@ -1,6 +1,6 @@
 
 module.exports = {
-    
+
     main: function (args = []) {
         let parsing = require('./args_parsing');
         console.log('Parsing arguments');
@@ -13,6 +13,13 @@ module.exports = {
             console.log('Listenning at port', server.address().port);
         });
         server.listen(options.port);
+        if (options.modify) {
+            process.addListener('SIGINT', function () {
+                let fs = require('fs');
+                fs.writeFileSync(options.file, JSON.stringify(data), options.encoding);
+                process.exit(0);
+            });
+        }
     }
 }
 
@@ -50,7 +57,7 @@ function doGet(data, path = [], params = {}) {
     return data;
 }
 
-function createServer(data = {}, onRequest = function (method = 'GET', statusCode = 200, url = '/', date = new Date()) { }) {
+function createServer(data = {}, afterResponse = function (method = 'GET', statusCode = 200, url = '/', date = new Date()) { }) {
     let http = require('http');
     let parsing = require('./args_parsing');
     let server = http.createServer(function (request, response) {
@@ -81,7 +88,7 @@ function createServer(data = {}, onRequest = function (method = 'GET', statusCod
                 break;
         }
         response.end();
-        onRequest(request.method, statusCode, request.url, requestTime);
+        afterResponse(request.method, statusCode, request.url, requestTime);
     });
     return server;
 }
