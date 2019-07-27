@@ -3,7 +3,6 @@ module.exports = {
 
     main: function (args = []) {
         let parsing = require('./args_parsing');
-        console.log('Parsing arguments');
         let options = parsing.optionParse(args);
         console.log('Loading from:', options.file, 'encoding:', options.encoding);
         let data = loadData(options.file, options.encoding, options.modify);

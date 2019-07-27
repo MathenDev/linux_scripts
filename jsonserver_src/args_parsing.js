@@ -1,6 +1,14 @@
 module.exports = {
     optionParse: function (args = []) {
         let attrs = {};
+        let help = args[0];
+        if (help == '-h' || help == '--help') {
+            console.log('-p, --port [number]         Set the port number. Default provived by system.');
+            console.log("-f, --file [file_path]      Set file path. Default 'data.json'.");
+            console.log("-e, --encoding [encoding]   Set file encoding. Default 'utf8'.");
+            console.log('-s, --save                  Overwrite file on exit. Default none.');
+            process.exit();
+        }
         for (let i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case '-p':
